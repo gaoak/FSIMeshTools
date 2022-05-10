@@ -17,12 +17,12 @@ void outputline(ofstream &file, double xmin, double xmax, int Nx, char X) {
 }
 
 int main(int argc, char *argv[]) {
-    int Nx = 1025;
-    int Ny = 257;
-    double xmin = -10.;
-    double xmax =  10.;
-    double ymin = -3.;
-    double ymax =  3.;
+    int Nx = 3801;
+    int Ny = 1601;
+    double xmin = -8.;
+    double xmax = 30.;
+    double ymin = -8.;
+    double ymax =  8.;
     string filename("FluidMesh.dat");
     ofstream outfile(filename.c_str());
     outputline(outfile, xmin, xmax, Nx, 'X');

@@ -4,26 +4,50 @@
 #include<vector>
 #include<cmath>
 #define SEGTYPE 2
+//user defined parameters
+#define NPOINTS 628
+//#define FILAMENT
+//#define CLOSED false
+#define CYLINDER
+#define CLOSED true
+
 using namespace std;
 
 vector<double> Cylinder(double t, double r) {
     vector<double> res(3);
-    res[0] = r * cos(t);
-    res[1] = r * sin(t);
+    double theta = 2. * M_PI * t;
+    res[0] = r * cos(theta);
+    res[1] = r * sin(theta);
     res[2] = 0.;
     return res;
+}
+
+vector<double> VerticalLine(double t, double r) {
+    vector<double> res(3);
+    res[0] = 0.;
+    res[1] = t-0.5;
+    res[2] = 0.;
+    return res;
+}
+
+vector<double> GeometryShape(double t, double r) {
+#ifdef CYLINDER
+    return Cylinder(t, r);
+#else
+    return VerticalLine(t, r);
+#endif
 }
 
 void GeneratePoints(int N, double r, vector<vector<double> > &points) {
     points.clear();
     points.push_back(vector<double>());
-    double dt = 2.*M_PI/(N-1);
+    double dt = 1./N;
     for(int i=0; i<N; ++i) {
-        points.push_back(Cylinder(dt*i, r));
+        points.push_back(GeometryShape(dt*i, r));
     }
 }
 
-void GenerateElements(vector<vector<double> > &points, vector<vector<int> > &elements, vector<vector<int> > &boundCondition) {
+void GenerateElements(vector<vector<double> > &points, vector<vector<int> > &elements, vector<vector<int> > &boundCondition, bool closed) {
     if(points.size()<3) {
         return;
     }
@@ -34,6 +58,10 @@ void GenerateElements(vector<vector<double> > &points, vector<vector<int> > &ele
     int Ne = (int)points.size() - 2;
     for(int i=1; i<=Ne; ++i) {
         vector<int> p = {i, i, i+1, i+1, SEGTYPE, 1};
+        elements.push_back(p);
+    }
+    if(closed) {
+        vector<int> p = {Ne+1, Ne+1, 1, 1, SEGTYPE, 1};
         elements.push_back(p);
     }
     for(int i=1; i<(int)points.size(); ++i) {
@@ -83,13 +111,13 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
 
 int main() {
     double radius = 0.5;
-    int Np = 101;
+    int Np = NPOINTS;
     string filename("Beam.dat");
     vector<vector<double> > points;
     vector<vector<int> > elements;
     vector<vector<int> > boundCondition;
     GeneratePoints(Np, radius, points);
-    GenerateElements(points, elements, boundCondition);
+    GenerateElements(points, elements, boundCondition, CLOSED);
     Output(filename, points, elements, boundCondition);
     
     return 0;
