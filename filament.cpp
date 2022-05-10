@@ -1,15 +1,18 @@
+/// Generates the body mesh (open or closed)
+/// user defined parameters
+#define NPOINTS 628
+//#define FILAMENT
+//#define CLOSED false
+#define CYLINDER
+#define CLOSED true
+/// end of description
+
 #include<iostream>
 #include<fstream>
 #include<string>
 #include<vector>
 #include<cmath>
 #define SEGTYPE 2
-//user defined parameters
-#define NPOINTS 628
-//#define FILAMENT
-//#define CLOSED false
-#define CYLINDER
-#define CLOSED true
 
 using namespace std;
 

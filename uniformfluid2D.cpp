@@ -1,3 +1,13 @@
+/// generates uniform fluid mesh
+/// user defined parameters
+#define NX 3801
+#define NY 1601
+#define XMIN -8.
+#define XMAX 30.
+#define YMIN -8.
+#define YMAX 8.
+/// end of description
+
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -17,12 +27,12 @@ void outputline(ofstream &file, double xmin, double xmax, int Nx, char X) {
 }
 
 int main(int argc, char *argv[]) {
-    int Nx = 3801;
-    int Ny = 1601;
-    double xmin = -8.;
-    double xmax = 30.;
-    double ymin = -8.;
-    double ymax =  8.;
+    int Nx = NX;
+    int Ny = NY;
+    double xmin = XMIN;
+    double xmax = XMAX;
+    double ymin = YMIN;
+    double ymax = YMAX;
     string filename("FluidMesh.dat");
     ofstream outfile(filename.c_str());
     outputline(outfile, xmin, xmax, Nx, 'X');
