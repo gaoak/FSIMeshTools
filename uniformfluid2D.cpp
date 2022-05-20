@@ -1,11 +1,11 @@
 /// generates uniform fluid mesh
 /// user defined parameters
-#define NX 3801
-#define NY 1601
-#define XMIN -8.
+#define NX 2501
+#define NY 2001
+#define XMIN -20.
 #define XMAX 30.
-#define YMIN -8.
-#define YMAX 8.
+#define YMIN -20.
+#define YMAX 20.
 /// end of description
 
 #include<iostream>

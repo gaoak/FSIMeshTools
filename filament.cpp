@@ -1,10 +1,8 @@
 /// Generates the body mesh (open or closed)
 /// user defined parameters
-#define NPOINTS 628
-//#define FILAMENT
-//#define CLOSED false
-#define CYLINDER
-#define CLOSED true
+#define NPOINTS 201
+#define GEOMTYPE   2 // 0 cylinder; 1 vertical line; 2 horizontal line
+#define CLOSED false
 /// end of description
 
 #include<iostream>
@@ -33,12 +31,21 @@ vector<double> VerticalLine(double t, double r) {
     return res;
 }
 
+vector<double> HorizontalLine(double t, double r) {
+    vector<double> res(3);
+    res[0] = t;
+    res[1] = 0.;
+    res[2] = 0.;
+    return res;
+}
+
 vector<double> GeometryShape(double t, double r) {
-#ifdef CYLINDER
-    return Cylinder(t, r);
-#else
-    return VerticalLine(t, r);
-#endif
+    if (GEOMTYPE == 0)
+        return Cylinder(t, r);
+    else if (GEOMTYPE == 1)
+        return VerticalLine(t, r);
+    else
+        return HorizontalLine(t, r);
 }
 
 void GeneratePoints(int N, double r, vector<vector<double> > &points) {
