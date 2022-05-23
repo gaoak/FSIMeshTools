@@ -1,7 +1,7 @@
 /// generates uniform fluid mesh
 /// user defined parameters
-#define NX 2501
-#define NY 2001
+#define NX 5001
+#define NY 4001
 #define XMIN -20.
 #define XMAX 30.
 #define YMIN -20.

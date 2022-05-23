@@ -1,6 +1,6 @@
 /// Generates the body mesh (open or closed)
 /// user defined parameters
-#define NPOINTS 201
+#define NPOINTS 301
 #define GEOMTYPE   2 // 0 cylinder; 1 vertical line; 2 horizontal line
 #define CLOSED false
 /// end of description
