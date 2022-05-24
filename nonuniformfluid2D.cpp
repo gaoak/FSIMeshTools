@@ -1,17 +1,17 @@
 /// generates uniform fluid mesh
 /// user defined parameters
-#define NX0 250
-#define NX1 4000
-#define NX2 250
+#define NX0 500
+#define NX1 1000
+#define NX2 1000
 
-#define NY0 925
+#define NY0 370
 #define NY1 300
-#define NY2 925
+#define NY2 370
 
-#define X0 -40.
-#define X1 -35.
+#define X0 -10.
+#define X1 -5.
 #define X2  5.
-#define X3 10.
+#define X3 15.
 
 #define Y0 -20.
 #define Y1 -1.5
