@@ -1,7 +1,8 @@
 /// Generates the body mesh (open or closed)
 /// user defined parameters
-#define NPOINTS 301
-#define GEOMTYPE   2 // 0 cylinder; 1 vertical line; 2 horizontal line
+#define NPOINTS 801
+#define GEOMTYPE   3 // 0 cylinder; 1 vertical line; 2 horizontal line; 3 horizontal cos
+#define PARAMS     5
 #define CLOSED false
 /// end of description
 
@@ -39,13 +40,25 @@ vector<double> HorizontalLine(double t, double r) {
     return res;
 }
 
+vector<double> HorizontalCos(double t, double r) {
+    vector<double> res(3);
+    res[0] = t*r;
+    res[1] = 0.*cos(t*2.*M_PI);
+    res[2] = 0.;
+    return res;
+}
+
 vector<double> GeometryShape(double t, double r) {
     if (GEOMTYPE == 0)
         return Cylinder(t, r);
     else if (GEOMTYPE == 1)
         return VerticalLine(t, r);
-    else
+    else if (GEOMTYPE == 2)
         return HorizontalLine(t, r);
+    else if (GEOMTYPE == 3)
+        return HorizontalCos(t, r);
+    else
+        return std::vector<double>(0);
 }
 
 void GeneratePoints(int N, double r, vector<vector<double> > &points) {
@@ -120,7 +133,7 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
 }
 
 int main() {
-    double radius = 0.5;
+    double radius = PARAMS;
     int Np = NPOINTS;
     string filename("Beam.dat");
     vector<vector<double> > points;
