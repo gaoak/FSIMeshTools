@@ -1,11 +1,4 @@
-/// Generates the body mesh (open or closed)
-/// user defined parameters
-#define NPOINTS 801
-#define GEOMTYPE   3 // 0 cylinder; 1 vertical line; 2 horizontal line; 3 horizontal cos
-#define PARAMS     5
-#define CLOSED false
-/// end of description
-
+#include"parameters2D.h"
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -43,7 +36,7 @@ vector<double> HorizontalLine(double t, double r) {
 vector<double> HorizontalCos(double t, double r) {
     vector<double> res(3);
     res[0] = t*r;
-    res[1] = 0.*cos(t*2.*M_PI);
+    res[1] = 0.1*cos(t*2.*M_PI);
     res[2] = 0.;
     return res;
 }

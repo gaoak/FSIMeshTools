@@ -1,12 +1,4 @@
-/// generates uniform fluid mesh
-/// user defined parameters
-#define NX 5001
-#define NY 4001
-#define XMIN -20.
-#define XMAX 30.
-#define YMIN -20.
-#define YMAX 20.
-/// end of description
+#include"parameters2D.h"
 
 #include<iostream>
 #include<fstream>
