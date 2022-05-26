@@ -55,12 +55,18 @@ vector<double> GeometryShape(double t, double r) {
         return std::vector<double>(0);
 }
 
-void GeneratePoints(int N, double r, vector<vector<double> > &points) {
+void GeneratePoints(int N, double r, vector<vector<double> > &points, bool closed) {
+    if(!closed) {
+        --N;
+    }
     points.clear();
     points.push_back(vector<double>());
     double dt = 1./N;
     for(int i=0; i<N; ++i) {
         points.push_back(GeometryShape(dt*i, r));
+    }
+    if(!closed) {
+        points.push_back(GeometryShape(1., r));
     }
 }
 
@@ -133,7 +139,7 @@ int main() {
     vector<vector<double> > points;
     vector<vector<int> > elements;
     vector<vector<int> > boundCondition;
-    GeneratePoints(Np, param, points);
+    GeneratePoints(Np, param, points, CLOSED);
     GenerateElements(points, elements, boundCondition, CLOSED);
     Output(filename, points, elements, boundCondition);
     
