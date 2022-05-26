@@ -17,7 +17,7 @@
 #define NX1 500
 #define NX2 550
 
-#define NY0 20
+#define NY0 60
 #define NY1 300
 #define NY2 340
 
@@ -26,7 +26,7 @@
 #define X2  0.
 #define X3 5.5
 
-#define Y0 -0.2
+#define Y0 -0.6
 #define Y1 0
 #define Y2  3
 #define Y3 20.
