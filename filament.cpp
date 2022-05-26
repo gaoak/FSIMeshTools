@@ -11,6 +11,7 @@ using namespace std;
 vector<double> Cylinder(double t, double r) {
     vector<double> res(3);
     double theta = 2. * M_PI * t;
+    r = 0.5 * r;
     res[0] = r * cos(theta);
     res[1] = r * sin(theta);
     res[2] = 0.;
@@ -20,14 +21,14 @@ vector<double> Cylinder(double t, double r) {
 vector<double> VerticalLine(double t, double r) {
     vector<double> res(3);
     res[0] = 0.;
-    res[1] = t-0.5;
+    res[1] = r*(t-0.5);
     res[2] = 0.;
     return res;
 }
 
 vector<double> HorizontalLine(double t, double r) {
     vector<double> res(3);
-    res[0] = t;
+    res[0] = r*t;
     res[1] = 0.;
     res[2] = 0.;
     return res;
@@ -36,7 +37,7 @@ vector<double> HorizontalLine(double t, double r) {
 vector<double> HorizontalCos(double t, double r) {
     vector<double> res(3);
     res[0] = t*r;
-    res[1] = 0.1*cos(t*2.*M_PI);
+    res[1] = PARAMS1*cos(t*2.*M_PI);
     res[2] = 0.;
     return res;
 }
@@ -126,13 +127,13 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
 }
 
 int main() {
-    double radius = PARAMS;
+    double param = PARAMS0;
     int Np = NPOINTS;
     string filename("Beam.dat");
     vector<vector<double> > points;
     vector<vector<int> > elements;
     vector<vector<int> > boundCondition;
-    GeneratePoints(Np, radius, points);
+    GeneratePoints(Np, param, points);
     GenerateElements(points, elements, boundCondition, CLOSED);
     Output(filename, points, elements, boundCondition);
     
