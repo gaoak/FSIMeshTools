@@ -1,10 +1,8 @@
-#include"parameters2D.h"
-/// end of description
 #include<vector>
 #include<iostream>
 #include<fstream>
 #include<string>
-
+#include"parameters2D.h"
 using namespace std;
 
 char buff[1000];
@@ -30,13 +28,9 @@ void outputline(ofstream &file, std::vector<double> &x, std::vector<int> N, char
 }
 
 int main(int argc, char *argv[]) {
-    std::vector<int> Nx{NX0, NX1, NX2};
-    std::vector<int> Ny{NY0, NY1, NY2};
-    std::vector<double> x{X0, X1, X2, X3};
-    std::vector<double> y{Y0, Y1, Y2, Y3};
     string filename("FluidMesh.dat");
     ofstream outfile(filename.c_str());
-    outputline(outfile, x, Nx, 'X');
-    outputline(outfile, y, Ny, 'Y');
+    outputline(outfile, xFMesh, NxFMesh, 'X');
+    outputline(outfile, yFMesh, NyFMesh, 'Y');
     outfile.close();
 }

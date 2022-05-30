@@ -34,28 +34,38 @@ vector<double> HorizontalLine(double t, double r) {
     return res;
 }
 
-vector<double> HorizontalCos(double t, double r) {
+vector<double> HorizontalCos(double t, const std::vector<double> &r) {
     vector<double> res(3);
-    res[0] = t*r;
-    res[1] = PARAMS1*cos(t*2.*M_PI);
+    res[0] = t*r[0];
+    res[1] = r[1]*cos(t*2.*M_PI);
     res[2] = 0.;
     return res;
 }
 
-vector<double> GeometryShape(double t, double r) {
+vector<double> HorizontalSquare(double t, const std::vector<double> &r) {
+    vector<double> res(3);
+    res[0] = t*r[0];
+    res[1] = r[1]*cos(t*2.*M_PI);
+    res[2] = 0.;
+    return res;
+}
+
+vector<double> GeometryShape(double t, const std::vector<double> &r) {
     if (GEOMTYPE == 0)
-        return Cylinder(t, r);
+        return Cylinder(t, r[0]);
     else if (GEOMTYPE == 1)
-        return VerticalLine(t, r);
+        return VerticalLine(t, r[0]);
     else if (GEOMTYPE == 2)
-        return HorizontalLine(t, r);
+        return HorizontalLine(t, r[0]);
     else if (GEOMTYPE == 3)
         return HorizontalCos(t, r);
+    else if (GEOMTYPE == 4)
+        return HorizontalSquare(t, r);
     else
         return std::vector<double>(0);
 }
 
-void GeneratePoints(int N, double r, vector<vector<double> > &points, bool closed) {
+void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> > &points, bool closed) {
     if(!closed) {
         --N;
     }
@@ -133,7 +143,7 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
 }
 
 int main() {
-    double param = PARAMS0;
+    std::vector<double> param = filaparams;
     int Np = NPOINTS;
     string filename("Beam.dat");
     vector<vector<double> > points;
