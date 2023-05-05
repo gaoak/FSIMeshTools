@@ -137,7 +137,7 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
     ofile << endtag << "\n";
     // output property parameters
     ofile << "1   E           G           A           RHO         GAMMA       IP          IA          IB" << "\n";
-    ofile << "1   0.100D+01   0.100D+01   0.100D+01   0.100D+01   0.100D+01   0.100D+01   0.150D+01   0.500D+00" << "\n";
+    ofile << "1   0.100D+01   0.100D+01   0.100D+01   0.100D+01   0.000D+00   0.100D+01   0.150D+01   0.500D+00" << "\n";
     ofile << endtag << endl;
     ofile.close();
 }
