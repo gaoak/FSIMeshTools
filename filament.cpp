@@ -21,7 +21,7 @@ vector<double> Cylinder(double t, double r) {
 vector<double> VerticalLine(double t, double r) {
     vector<double> res(3);
     res[0] = 0.;
-    res[1] = r*(t-0.5);
+    res[1] = r*t;
     res[2] = 0.;
     return res;
 }
