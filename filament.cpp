@@ -108,22 +108,22 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
     char buff[1000];
     string endtag("END");
     ofstream ofile(filename.c_str());
-    ofile << "Frame3D\n";
-    sprintf(buff, "%5d %5d %5d\n", int(points.size()) - 1, int(ele.size()) - 1, 1);
+    ofile << "Frame3D : point number, element number, material number, bodytype 0 (rigid body with surface mesh), 1 (plate , needs to provide a direction vector)\n";
+    sprintf(buff, "%5d %5d %5d %5d %22.18f %22.18f %22.18f\n", int(points.size()) - 1, int(ele.size()) - 1, 1, 1, 0.0, 0.0, 1.0);
     ofile << buff << endtag << "\n"; 
     //output points
-    sprintf(buff, "%5d %22s %22s %22s\n", int(points.size())-1, "X", "Y", "Z");
+    sprintf(buff, "%5d %22s %22s %22s %22s %22s\n", int(points.size())-1, "X", "Y", "Z", "Lspan", "Rspan");
     ofile << buff;
     for(size_t i=1; i<points.size(); ++i) {
-        sprintf(buff, "%5d %22.18f %22.18f %22.18f\n", (int)i, points[i][0], points[i][1], points[i][2]);
+        sprintf(buff, "%5d %22.18f %22.18f %22.18f %22.18f %22.18f\n", (int)i, points[i][0], points[i][1], points[i][2], 1.0, 0.0);
         ofile << buff;
     }
     ofile << endtag << "\n";
     // output elements
-    sprintf(buff, "%5d %5s %5s %5s %5s %5s\n", int(ele.size()) - 1, "I", "J", "K", "TYPE", "MAT");
+    sprintf(buff, "%5d %5s %5s %5s %5s %5s\n", int(ele.size()) - 1, "I", "J", "K", "TYPE", "MAT", "Nspan");
     ofile << buff;
     for(size_t i=1; i<ele.size(); ++i) {
-        sprintf(buff, "%5d %5d %5d %5d %5d %5d\n", ele[i][0], ele[i][1], ele[i][2], ele[i][3], ele[i][4], ele[i][5]);
+        sprintf(buff, "%5d %5d %5d %5d %5d %5d %5d\n", ele[i][0], ele[i][1], ele[i][2], ele[i][3], ele[i][4], ele[i][5], 40);
         ofile << buff;
     }
     ofile << endtag << "\n";

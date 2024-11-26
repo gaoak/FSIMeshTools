@@ -29,9 +29,9 @@ std::vector<int> NyFMesh{  10, 410, 680};
 #define PARAMS1    0.1 //cos amplitude
 #define CLOSED false */
 
-#define NPOINTS 7101
-#define GEOMTYPE   2 // 0 cylinder; 1 vertical line; 2 horizontal line;
+#define NPOINTS 41
+#define GEOMTYPE   1 // 0 cylinder; 1 vertical line; 2 horizontal line;
                      //3 horizontal cos; 4 horizontal square wave
-std::vector<double> filaparams{71., 0., 1}; //length, amplitude, length1, length2
+std::vector<double> filaparams{1., 0., 1}; //length, amplitude, length1, length2
 #define CLOSED false
 /// end of description
