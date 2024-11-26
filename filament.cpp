@@ -104,7 +104,63 @@ void GenerateElements(vector<vector<double> > &points, vector<vector<int> > &ele
     boundCondition[1][1] = 1;
 }
 
-void Output(string filename, vector<vector<double> > &points, vector<vector<int> > &ele, vector<vector<int> > &bc) {
+double SpanConst(double l) {
+    double res;
+    res = l;
+    return res;
+}
+
+double SpanLine(double t, const std::vector<double> &l) {
+    double res;
+    res = l[0]*t+l[1];
+    return res;
+}
+
+double SpanCos(double t, const std::vector<double> &l) {
+    double res;
+    res= l[0]*cos(t*l[1]*2.*M_PI+l[2]*180./M_PI)+l[3];
+    return res;
+}
+
+double SpanShape(double t, int spantp, std::vector<double> &spanpm) {
+    if (spantp == 0)
+        return SpanConst(spanpm[0]);
+    else if (spantp == 1)
+        return SpanLine(t, spanpm);
+    else if (spantp == 2)
+        return SpanCos(t, spanpm);
+    else
+        return 0.;
+}
+
+void GenerateSpans(int N, const double r, std::vector<int> &spantp, std::vector<std::vector<double> > &spanpm, vector<double> &Lspan, vector<double> &Rspan, vector<int> &Nspan, bool closed) {
+    if(!closed) {
+        --N;
+    }
+    Lspan.clear();
+    Rspan.clear();
+    Nspan.clear();
+    Lspan.push_back(0.);
+    Rspan.push_back(0.);
+    Nspan.push_back(0);
+    double dt = 1./N;
+    for(int i=0; i<N; ++i) {
+        Lspan.push_back(SpanShape(dt*i, spantp[0], spanpm[0]));
+        Rspan.push_back(SpanShape(dt*i, spantp[1], spanpm[1]));
+    }
+    if(!closed) {
+        Lspan.push_back(SpanShape(1., spantp[0], spanpm[0]));
+        Rspan.push_back(SpanShape(1., spantp[1], spanpm[1]));
+    }
+    for(int i=1; i<=N; ++i) {
+        Nspan.push_back(floor((Lspan[i]+Rspan[i]+Lspan[i+1]+Rspan[i+1])/(2.*dt)));
+    }
+    if(!closed) {
+        Nspan.push_back(1.);
+    }
+}
+
+void Output(string filename, vector<vector<double> > &points, vector<vector<int> > &ele, vector<vector<int> > &bc, vector<double> &Lspan, vector<double> &Rspan, vector<int> &Nspan) {
     char buff[1000];
     string endtag("END");
     ofstream ofile(filename.c_str());
@@ -115,7 +171,7 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
     sprintf(buff, "%5d %22s %22s %22s %22s %22s\n", int(points.size())-1, "X", "Y", "Z", "Lspan", "Rspan");
     ofile << buff;
     for(size_t i=1; i<points.size(); ++i) {
-        sprintf(buff, "%5d %22.18f %22.18f %22.18f %22.18f %22.18f\n", (int)i, points[i][0], points[i][1], points[i][2], 1.0, 0.0);
+        sprintf(buff, "%5d %22.18f %22.18f %22.18f %22.18f %22.18f\n", (int)i, points[i][0], points[i][1], points[i][2], Lspan[i], Rspan[i]);
         ofile << buff;
     }
     ofile << endtag << "\n";
@@ -123,7 +179,7 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
     sprintf(buff, "%5d %5s %5s %5s %5s %5s\n", int(ele.size()) - 1, "I", "J", "K", "TYPE", "MAT", "Nspan");
     ofile << buff;
     for(size_t i=1; i<ele.size(); ++i) {
-        sprintf(buff, "%5d %5d %5d %5d %5d %5d %5d\n", ele[i][0], ele[i][1], ele[i][2], ele[i][3], ele[i][4], ele[i][5], 40);
+        sprintf(buff, "%5d %5d %5d %5d %5d %5d %5d\n", ele[i][0], ele[i][1], ele[i][2], ele[i][3], ele[i][4], ele[i][5], Nspan[i]);
         ofile << buff;
     }
     ofile << endtag << "\n";
@@ -145,13 +201,19 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
 int main() {
     std::vector<double> param = filaparams;
     int Np = NPOINTS;
-    string filename("Beam.dat");
+    string filename("Beam1.dat");
     vector<vector<double> > points;
     vector<vector<int> > elements;
     vector<vector<int> > boundCondition;
+    std::vector<int> spantp = spantype;
+    std::vector<std::vector<double> > spanpm = spanparams;
+    vector<double> Lspan;
+    vector<double> Rspan;
+    vector<int> Nspan;
     GeneratePoints(Np, param, points, CLOSED);
     GenerateElements(points, elements, boundCondition, CLOSED);
-    Output(filename, points, elements, boundCondition);
+    GenerateSpans(Np, param[0], spantp, spanpm, Lspan, Rspan, Nspan, CLOSED);
+    Output(filename, points, elements, boundCondition, Lspan, Rspan, Nspan);
     
     return 0;
 }
