@@ -51,18 +51,29 @@ vector<double> HorizontalSquare(double t, const std::vector<double> &r) {
 }
 
 vector<double> GeometryShape(double t, const std::vector<double> &r) {
-    if (GEOMTYPE == 0)
-        return Cylinder(t, r[0]);
-    else if (GEOMTYPE == 1)
-        return VerticalLine(t, r[0]);
-    else if (GEOMTYPE == 2)
-        return HorizontalLine(t, r[0]);
-    else if (GEOMTYPE == 3)
-        return HorizontalCos(t, r);
-    else if (GEOMTYPE == 4)
-        return HorizontalSquare(t, r);
-    else
-        return std::vector<double>(0);
+    std::vector<double> p;
+    if (GEOMTYPE == 0) {
+        p = Cylinder(t, r[0]);
+    }
+    else if (GEOMTYPE == 1) {
+        p = VerticalLine(t, r[0]);
+    }
+    else if (GEOMTYPE == 2) {
+        p = HorizontalLine(t, r[0]);
+    }
+    else if (GEOMTYPE == 3) {
+        p = HorizontalCos(t, r);
+    }
+    else if (GEOMTYPE == 4) {
+        p = HorizontalSquare(t, r);
+    }
+    else {
+        p = std::vector<double>(0);
+    }
+    p.push_back(0.);
+    p.push_back(0.);
+    p.push_back(1.);
+    return p;
 }
 
 void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> > &points, bool closed) {
@@ -164,14 +175,14 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
     char buff[1000];
     string endtag("END");
     ofstream ofile(filename.c_str());
-    ofile << "Frame3D : point number, element number, material number, bodytype 0 (rigid body with surface mesh), 1 (plate , needs to provide a direction vector)\n";
-    sprintf(buff, "%5d %5d %5d %5d %22.18f %22.18f %22.18f\n", int(points.size()) - 1, int(ele.size()) - 1, 1, 1, 0.0, 0.0, 1.0);
+    ofile << "Frame3D : point number, element number, material number\n";
+    sprintf(buff, "%5d %5d %5d\n", int(points.size()) - 1, int(ele.size()) - 1, 1);
     ofile << buff << endtag << "\n"; 
     //output points
     sprintf(buff, "%5d %22s %22s %22s %22s %22s\n", int(points.size())-1, "X", "Y", "Z", "Lspan", "Rspan");
     ofile << buff;
     for(size_t i=1; i<points.size(); ++i) {
-        sprintf(buff, "%5d %22.18f %22.18f %22.18f %22.18f %22.18f\n", (int)i, points[i][0], points[i][1], points[i][2], Lspan[i], Rspan[i]);
+        sprintf(buff, "%5d %22.18f %22.18f %22.18f %22.18f %22.18f %22.18f %22.18f %22.18f\n", (int)i, points[i][0], points[i][1], points[i][2], Lspan[i], Rspan[i], points[i][3], points[i][4], points[i][5]);
         ofile << buff;
     }
     ofile << endtag << "\n";
