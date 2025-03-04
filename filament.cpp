@@ -50,7 +50,7 @@ vector<double> HorizontalSquare(double t, const std::vector<double> &r) {
     return res;
 }
 
-vector<double> GeometryShape(double t, const std::vector<double> &r) {
+vector<double> GeometryShape(double t, const std::vector<double> &r, vector<double> &normal) {
     std::vector<double> p;
     if (GEOMTYPE == 0) {
         p = Cylinder(t, r[0]);
@@ -70,13 +70,13 @@ vector<double> GeometryShape(double t, const std::vector<double> &r) {
     else {
         p = std::vector<double>(0);
     }
-    p.push_back(0.);
-    p.push_back(0.);
-    p.push_back(1.);
+    p.push_back(normal[0]);
+    p.push_back(normal[1]);
+    p.push_back(normal[2]);
     return p;
 }
 
-void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> > &points, bool closed) {
+void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> > &points, vector<double> &normal, bool closed) {
     if(!closed) {
         --N;
     }
@@ -84,10 +84,10 @@ void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> >
     points.push_back(vector<double>());
     double dt = 1./N;
     for(int i=0; i<N; ++i) {
-        points.push_back(GeometryShape(dt*i, r));
+        points.push_back(GeometryShape(dt*i, r, normal));
     }
     if(!closed) {
-        points.push_back(GeometryShape(1., r));
+        points.push_back(GeometryShape(1., r, normal));
     }
 }
 
@@ -123,13 +123,30 @@ double SpanConst(double l) {
 
 double SpanLine(double t, const std::vector<double> &l) {
     double res;
-    res = l[0]*t+l[1];
+    res = l[0]+l[1]*t;
+    return res;
+}
+
+double SpanEllipse(double t, const std::vector<double> &l) {
+    double res;
+    res = l[0]+l[3]*sqrt(1.0-pow((t-l[1])/l[2],2));
     return res;
 }
 
 double SpanCos(double t, const std::vector<double> &l) {
     double res;
-    res= l[0]*cos(t*l[1]*2.*M_PI+l[2]*180./M_PI)+l[3];
+    res = l[0]+l[1]*cos(t*l[2]*2.*M_PI+l[3]*180./M_PI);
+    return res;
+}
+
+double SpanSawtooth(double t, const std::vector<double> &l) {
+    double res, x, slop;
+    x    = fmod(t,l[1]);
+    slop = 2*l[2]/l[1];
+    if(x <= 0.5*l[1]) 
+        res  = l[0]+slop*x;
+    else
+        res  = l[0]+l[2]-slop*(x-0.5*l[1]);
     return res;
 }
 
@@ -139,7 +156,11 @@ double SpanShape(double t, int spantp, std::vector<double> &spanpm) {
     else if (spantp == 1)
         return SpanLine(t, spanpm);
     else if (spantp == 2)
+        return SpanEllipse(t, spanpm);
+    else if (spantp == 3)
         return SpanCos(t, spanpm);
+    else if (spantp == 4)
+        return SpanSawtooth(t, spanpm);
     else
         return 0.;
 }
@@ -212,7 +233,7 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
 int main() {
     std::vector<double> param = filaparams;
     int Np = NPOINTS;
-    string filename("Beam1.dat");
+    string filename("plate.dat");
     vector<vector<double> > points;
     vector<vector<int> > elements;
     vector<vector<int> > boundCondition;
@@ -221,7 +242,7 @@ int main() {
     vector<double> Lspan;
     vector<double> Rspan;
     vector<int> Nspan;
-    GeneratePoints(Np, param, points, CLOSED);
+    GeneratePoints(Np, param, points, normal, CLOSED);
     GenerateElements(points, elements, boundCondition, CLOSED);
     GenerateSpans(Np, param[0], spantp, spanpm, Lspan, Rspan, Nspan, CLOSED);
     Output(filename, points, elements, boundCondition, Lspan, Rspan, Nspan);
