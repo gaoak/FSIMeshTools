@@ -50,7 +50,7 @@ vector<double> HorizontalSquare(double t, const std::vector<double> &r) {
     return res;
 }
 
-vector<double> GeometryShape(double t, const std::vector<double> &r) {
+vector<double> GeometryShape(double t, const std::vector<double> &r, vector<double> &normal) {
     std::vector<double> p;
     if (GEOMTYPE == 0) {
         p = Cylinder(t, r[0]);
@@ -70,13 +70,13 @@ vector<double> GeometryShape(double t, const std::vector<double> &r) {
     else {
         p = std::vector<double>(0);
     }
-    p.push_back(0.);
-    p.push_back(0.);
-    p.push_back(1.);
+    p.push_back(normal[0]);
+    p.push_back(normal[1]);
+    p.push_back(normal[2]);
     return p;
 }
 
-void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> > &points, bool closed) {
+void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> > &points, vector<double> &normal, bool closed) {
     if(!closed) {
         --N;
     }
@@ -84,10 +84,10 @@ void GeneratePoints(int N, const std::vector<double> &r, vector<vector<double> >
     points.push_back(vector<double>());
     double dt = 1./N;
     for(int i=0; i<N; ++i) {
-        points.push_back(GeometryShape(dt*i, r));
+        points.push_back(GeometryShape(dt*i, r, normal));
     }
     if(!closed) {
-        points.push_back(GeometryShape(1., r));
+        points.push_back(GeometryShape(1., r, normal));
     }
 }
 
@@ -212,7 +212,7 @@ void Output(string filename, vector<vector<double> > &points, vector<vector<int>
 int main() {
     std::vector<double> param = filaparams;
     int Np = NPOINTS;
-    string filename("Beam1.dat");
+    string filename("plate.dat");
     vector<vector<double> > points;
     vector<vector<int> > elements;
     vector<vector<int> > boundCondition;
@@ -221,7 +221,7 @@ int main() {
     vector<double> Lspan;
     vector<double> Rspan;
     vector<int> Nspan;
-    GeneratePoints(Np, param, points, CLOSED);
+    GeneratePoints(Np, param, points, normal, CLOSED);
     GenerateElements(points, elements, boundCondition, CLOSED);
     GenerateSpans(Np, param[0], spantp, spanpm, Lspan, Rspan, Nspan, CLOSED);
     Output(filename, points, elements, boundCondition, Lspan, Rspan, Nspan);
